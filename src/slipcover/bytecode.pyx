@@ -67,7 +67,7 @@ def opcode_arg(opcode: int, arg: int, min_ext : int = 0) -> List[int]:
     return bytecode
 
 
-def unpack_opargs(code: bytes) -> Tuple[int, int, int, int]:
+def unpack_opargs(code: bytes | bytearray) -> Tuple[int, int, int, int]:
     """Unpacks opcodes and their arguments, returning:
 
     - the beginning offset, including that of the first EXTENDED_ARG, if any
@@ -93,7 +93,7 @@ def unpack_opargs(code: bytes) -> Tuple[int, int, int, int]:
         off += 2
 
 
-def calc_max_stack(code: bytes) -> int:
+def calc_max_stack(code: bytearray) -> int:
     """Calculates the maximum stack size for code to execute.
 
     Assumes linear execution (i.e., not things like a loop pushing to the stack).

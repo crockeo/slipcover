@@ -36,6 +36,7 @@ slipcover = "slipcover.__main__:main"
 requires = [
     "setuptools>61",
     "wheel",
+    "cython",
     "tomli; python_version < '3.11'" # tomllib alternative
 ]
 build-backend = "setuptools.build_meta"

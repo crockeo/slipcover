@@ -3,6 +3,7 @@ import sys
 import os
 import re
 from pathlib import Path
+from Cython.Build import cythonize
 
 try:
     import tomllib  # available in Python 3.11+
@@ -78,14 +79,20 @@ def ext_modules():
     def cxx_version(v):
         return [f"-std={v}" if sys.platform != "win32" else f"/std:{v}"]
 
-    return [setuptools.extension.Extension(
-        'slipcover.probe',
-        sources=['src/probe.cxx'],
-        extra_compile_args=cxx_version('c++17') + platform_compile_args() + limited_api_args(),
-        extra_link_args=platform_link_args(),
-        py_limited_api=bool(limited_api_args()),
-        language='c++',
-    )]
+    return [
+        setuptools.extension.Extension(
+            'slipcover.probe',
+            sources=['src/probe.cxx'],
+            extra_compile_args=cxx_version('c++17') + platform_compile_args() + limited_api_args(),
+            extra_link_args=platform_link_args(),
+            py_limited_api=bool(limited_api_args()),
+            language='c++',
+        ),
+        *cythonize([
+            "src/slipcover/bytecode.pyx",
+            "src/slipcover/slipcover.pyx",
+        ]),
+    ]
 
 
 def bdist_wheel_options():
